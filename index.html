@@ -1,343 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Shooter Game</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: black;
-            font-family: Arial, sans-serif;
-        }
-
-        #gameCanvas {
-            display: block;
-            margin: 0 auto;
-            background-color: black;
-        }
-
-        /* Overlay styles */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-            z-index: 10;
-        }
-
-        /* Button styles */
-        .button {
-            padding: 15px 30px;
-            font-size: 20px;
-            color: white;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Instructions styling */
-        .instructions {
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        /* Centered Play Again Button Style */
-        #playAgainButton {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            font-size: 24px;
-            color: white;
-            background-color: #f44336;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 11;
-        }
-
-        #playAgainButton.hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Space Shooter Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      font-family: Arial, sans-serif;
+    }
+    #gameCanvas {
+      display: block;
+      margin: 0 auto;
+      background-color: black;
+    }
+    /* Overlay styles */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+    /* Button styles */
+    .button {
+      padding: 15px 30px;
+      font-size: 20px;
+      color: white;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+    /* Instructions styling */
+    .instructions {
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    /* Centered Play Again Button Style */
+    #playAgainButton {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      font-size: 24px;
+      color: white;
+      background-color: #f44336;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 11;
+    }
+    #playAgainButton.hidden {
+      display: none;
+    }
+    /* Pause overlay style */
+    #pauseOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      z-index: 12;
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <canvas id="gameCanvas"></canvas>
 
-<canvas id="gameCanvas"></canvas>
-
-<!-- Start Screen Overlay -->
-<div id="startScreen" class="overlay">
+  <!-- Start Screen Overlay -->
+  <div id="startScreen" class="overlay">
     <h1>Space Shooter Game</h1>
     <div class="instructions">
-        <h2>Instructions:</h2>
-        <p>
-            <strong>Objective:</strong> Control the green triangle at the bottom of the screen to shoot yellow balls and destroy the falling red triangles. Prevent the red triangles from colliding with you to maintain your score.
-        </p>
-        <p>
-            <strong>Controls:</strong><br>
-            - <strong>Left Arrow (←):</strong> Move the green triangle to the left.<br>
-            - <strong>Right Arrow (→):</strong> Move the green triangle to the right.<br>
-            - <strong>Spacebar:</strong> Shoot a yellow ball upward to destroy enemies.
-        </p>
-        <p>
-            <strong>Scoring:</strong><br>
-            - <strong>+10 Points:</strong> For each red triangle destroyed by a yellow ball.<br>
-            - <strong>-5 Points:</strong> For each red triangle that collides with the green triangle.
-        </p>
-        <p>
-            <strong>Timer:</strong> The game lasts for <strong>30 seconds</strong>. Try to score as high as possible within this time.
-        </p>
+      <h2>Instructions:</h2>
+      <p>
+        <strong>Objective:</strong> Control the green triangle at the bottom of the screen to shoot yellow balls and destroy the falling red triangles. Prevent the red triangles from colliding with you to maintain your score.
+      </p>
+      <p>
+        <strong>Controls:</strong><br />
+        - <strong>Left Arrow (←):</strong> Move left.<br />
+        - <strong>Right Arrow (→):</strong> Move right.<br />
+        - <strong>Spacebar:</strong> Shoot a yellow ball.<br />
+        - <strong>P:</strong> Pause/Resume the game.
+      </p>
+      <p>
+        <strong>Scoring:</strong><br />
+        - <strong>+10 Points:</strong> For each enemy destroyed.<br />
+        - <strong>-5 Points:</strong> For each enemy collision.
+      </p>
+      <p>
+        <strong>Timer:</strong> 30 seconds. Try to score as high as possible!
+      </p>
     </div>
     <button id="startButton" class="button">Start Game</button>
-</div>
+  </div>
 
-<!-- Play Again Button -->
-<button id="playAgainButton" class="hidden">Play Again</button>
+  <!-- Play Again Button -->
+  <button id="playAgainButton" class="hidden">Play Again</button>
 
-<script>
-// Setup game variables
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  <!-- Pause Overlay -->
+  <div id="pauseOverlay">Paused</div>
 
-let player = {
-    x: canvas.width / 2 - 30,
-    y: canvas.height - 80,
-    width: 60,
-    height: 60,
-    speed: 30, // 2x speed for faster movement
-    balls: []
-};
+  <script>
+    // Setup game variables and canvas
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    function updateCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
 
-let enemies = [];
-let enemySpeed = 0.5; // Reduced speed for slower falling enemies
-let score = 0;
-let gameOver = false;
-let timeLeft = 30; // 30 seconds for the game timer
-let timerInterval;
+    let player = {
+      x: canvas.width / 2 - 30,
+      y: canvas.height - 80,
+      width: 60,
+      height: 60,
+      speed: 30,
+      balls: []
+    };
 
-// DOM Elements
-const startScreen = document.getElementById('startScreen');
-const startButton = document.getElementById('startButton');
-const playAgainButton = document.getElementById('playAgainButton');
+    let enemies = [];
+    let enemySpeed = 0.5;
+    let score = 0;
+    let gameOver = false;
+    let timeLeft = 30;
+    let timerInterval;
+    let enemyInterval;
+    let paused = false;
 
-// Handle player movement
-document.addEventListener('keydown', (e) => {
-    if (!gameOver && !startScreen.classList.contains('hidden')) return; // Ignore key presses on start screen
-    if (e.key === 'ArrowLeft' && player.x > 0) player.x -= player.speed;
-    if (e.key === 'ArrowRight' && player.x < canvas.width - player.width) player.x += player.speed;
-    if (e.key === ' ') shootBall();
-});
+    // DOM Elements
+    const startScreen = document.getElementById('startScreen');
+    const startButton = document.getElementById('startButton');
+    const playAgainButton = document.getElementById('playAgainButton');
+    const pauseOverlay = document.getElementById('pauseOverlay');
 
-// Shoot a ball
-function shootBall() {
-    player.balls.push({
+    // Handle player movement and shooting; also toggle pause with "p" key
+    document.addEventListener('keydown', (e) => {
+      // Allow pausing regardless of game state
+      if (e.key === 'p' || e.key === 'P') {
+        togglePause();
+        return;
+      }
+      if (!gameOver && !startScreen.classList.contains('hidden') || paused) return;
+      if (e.key === 'ArrowLeft' && player.x > 0) player.x -= player.speed;
+      if (e.key === 'ArrowRight' && player.x < canvas.width - player.width) player.x += player.speed;
+      if (e.key === ' ') shootBall();
+    });
+
+    // Toggle pause state
+    function togglePause() {
+      paused = !paused;
+      pauseOverlay.style.display = paused ? "flex" : "none";
+    }
+
+    // Shoot a ball upward
+    function shootBall() {
+      player.balls.push({
         x: player.x + player.width / 2,
         y: player.y,
         radius: 7,
         speed: 5
-    });
-}
+      });
+    }
 
-// Create enemy
-function createEnemy() {
-    enemies.push({
+    // Create a new enemy at random x position
+    function createEnemy() {
+      enemies.push({
         x: Math.random() * (canvas.width - 50),
         y: -50,
         width: 50,
         height: 50
-    });
-}
-
-let enemyInterval;
-
-// Update game objects
-function update() {
-    // Move balls
-    for (let i = 0; i < player.balls.length; i++) {
-        player.balls[i].y -= player.balls[i].speed;
-        if (player.balls[i].y < 0) {
-            player.balls.splice(i, 1); // Remove ball if off screen
-            i--;
-        }
+      });
     }
 
-    // Move enemies
-    for (let i = 0; i < enemies.length; i++) {
-        enemies[i].y += enemySpeed; // Slower falling enemies
+    // Update game objects
+    function update() {
+      // Update balls
+      for (let i = 0; i < player.balls.length; i++) {
+        player.balls[i].y -= player.balls[i].speed;
+        if (player.balls[i].y < 0) {
+          player.balls.splice(i, 1);
+          i--;
+        }
+      }
 
-        // Check for collision with player
+      // Update enemies
+      for (let i = 0; i < enemies.length; i++) {
+        enemies[i].y += enemySpeed;
+
+        // Collision with player
         if (isColliding(enemies[i], player)) {
-            score -= 5; // Deduct 5 points if enemy hits the player
-            enemies.splice(i, 1); // Remove the enemy on collision with player
-            i--;
-            if (score < 0) score = 0; // Ensure score doesn't go below 0
-            continue;
+          score = Math.max(0, score - 5);
+          enemies.splice(i, 1);
+          i--;
+          continue;
         }
 
-        // Check for collision with ball
+        // Collision with balls
         for (let j = 0; j < player.balls.length; j++) {
-            if (isBallCollidingWithEnemy(player.balls[j], enemies[i])) {
-                enemies.splice(i, 1); // Remove the enemy
-                player.balls.splice(j, 1); // Remove the ball
-                score += 10; // Add 10 points for each enemy hit
-                i--; // Adjust index to prevent skipping an enemy
-                break;
-            }
+          if (isBallCollidingWithEnemy(player.balls[j], enemies[i])) {
+            enemies.splice(i, 1);
+            player.balls.splice(j, 1);
+            score += 10;
+            i--;
+            break;
+          }
         }
 
         // Remove enemy if off screen
         if (enemies[i] && enemies[i].y > canvas.height) {
-            enemies.splice(i, 1);
-            i--;
+          enemies.splice(i, 1);
+          i--;
         }
+      }
     }
-}
 
-// Collision detection function for rectangles
-function isColliding(a, b) {
-    return a.x < b.x + b.width &&
-           a.x + a.width > b.x &&
-           a.y < b.y + b.height &&
-           a.y + a.height > b.y;
-}
+    // Rectangle collision detection
+    function isColliding(a, b) {
+      return a.x < b.x + b.width &&
+             a.x + a.width > b.x &&
+             a.y < b.y + b.height &&
+             a.y + a.height > b.y;
+    }
 
-// Collision detection function for balls (circles) and enemies
-function isBallCollidingWithEnemy(ball, enemy) {
-    let distX = Math.abs(ball.x - (enemy.x + enemy.width / 2));
-    let distY = Math.abs(ball.y - (enemy.y + enemy.height / 2));
+    // Collision detection between circle (ball) and rectangle (enemy)
+    function isBallCollidingWithEnemy(ball, enemy) {
+      let distX = Math.abs(ball.x - (enemy.x + enemy.width / 2));
+      let distY = Math.abs(ball.y - (enemy.y + enemy.height / 2));
 
-    if (distX > (enemy.width / 2 + ball.radius)) return false;
-    if (distY > (enemy.height / 2 + ball.radius)) return false;
+      if (distX > (enemy.width / 2 + ball.radius)) return false;
+      if (distY > (enemy.height / 2 + ball.radius)) return false;
+      if (distX <= enemy.width / 2) return true;
+      if (distY <= enemy.height / 2) return true;
+      let dx = distX - enemy.width / 2;
+      let dy = distY - enemy.height / 2;
+      return (dx * dx + dy * dy <= (ball.radius * ball.radius));
+    }
 
-    if (distX <= (enemy.width / 2)) return true;
-    if (distY <= (enemy.height / 2)) return true;
+    // Draw game objects
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let dx = distX - enemy.width / 2;
-    let dy = distY - enemy.height / 2;
-    return (dx * dx + dy * dy <= (ball.radius * ball.radius));
-}
+      // Draw player (green triangle with a cannon)
+      ctx.fillStyle = '#00ffcc';
+      ctx.beginPath();
+      ctx.moveTo(player.x + player.width / 2, player.y);
+      ctx.lineTo(player.x + player.width / 2 - 10, player.y + 15);
+      ctx.lineTo(player.x + player.width / 2 + 10, player.y + 15);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(player.x + player.width / 2, player.y + 15);
+      ctx.lineTo(player.x, player.y + player.height);
+      ctx.lineTo(player.x + player.width, player.y + player.height);
+      ctx.closePath();
+      ctx.fill();
 
-// Draw objects on canvas
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw player (green triangle with a cannon)
-    ctx.fillStyle = '#00ffcc'; // Player color (cyan)
-    // Cannon
-    ctx.beginPath();
-    ctx.moveTo(player.x + player.width / 2, player.y); // Top vertex (cannon)
-    ctx.lineTo(player.x + player.width / 2 - 10, player.y + 15); // Cannon left
-    ctx.lineTo(player.x + player.width / 2 + 10, player.y + 15); // Cannon right
-    ctx.closePath();
-    ctx.fill();
-
-    // Player body (triangle)
-    ctx.beginPath();
-    ctx.moveTo(player.x + player.width / 2, player.y + 15); // Bottom vertex
-    ctx.lineTo(player.x, player.y + player.height); // Bottom left vertex
-    ctx.lineTo(player.x + player.width, player.y + player.height); // Bottom right vertex
-    ctx.closePath();
-    ctx.fill();
-
-    // Draw balls (yellow)
-    ctx.fillStyle = 'yellow';
-    player.balls.forEach((ball) => {
+      // Draw balls (yellow)
+      ctx.fillStyle = 'yellow';
+      player.balls.forEach(ball => {
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         ctx.fill();
-    });
+      });
 
-    // Draw enemies (red triangles)
-    ctx.fillStyle = 'red';
-    enemies.forEach((enemy) => {
+      // Draw enemies (red triangles)
+      ctx.fillStyle = 'red';
+      enemies.forEach(enemy => {
         ctx.beginPath();
-        ctx.moveTo(enemy.x + enemy.width / 2, enemy.y); // Top vertex
-        ctx.lineTo(enemy.x, enemy.y + enemy.height); // Bottom left vertex
-        ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height); // Bottom right vertex
+        ctx.moveTo(enemy.x + enemy.width / 2, enemy.y);
+        ctx.lineTo(enemy.x, enemy.y + enemy.height);
+        ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height);
         ctx.closePath();
         ctx.fill();
-    });
+      });
 
-    // Draw score
-    ctx.fillStyle = 'white';
-    ctx.font = '30px Arial';
-    ctx.fillText(`Score: ${score}`, 20, 50);
+      // Draw score and timer
+      ctx.fillStyle = 'white';
+      ctx.font = '30px Arial';
+      ctx.fillText(`Score: ${score}`, 20, 50);
+      ctx.fillText(`Time Left: ${timeLeft}`, canvas.width - 200, 50);
 
-    // Draw timer
-    ctx.fillText(`Time Left: ${timeLeft}`, canvas.width - 200, 50);
-}
+      // If paused, draw a paused overlay text
+      if (paused) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = '60px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText("Paused", canvas.width / 2, canvas.height / 2);
+        ctx.textAlign = 'left';
+      }
+    }
 
-// Start the game
-function startGame() {
-    gameOver = false;
-    score = 0;
-    player.balls = [];
-    enemies = [];
-    timeLeft = 30;
+    // Main game loop
+    function gameLoop() {
+      if (gameOver) return;
+      if (!paused) update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
 
-    startScreen.classList.add('hidden');
-    playAgainButton.classList.add('hidden');
+    // Start the game
+    function startGame() {
+      gameOver = false;
+      score = 0;
+      player.balls = [];
+      enemies = [];
+      timeLeft = 30;
 
-    enemyInterval = setInterval(createEnemy, 1000); // Create a new enemy every 1 second
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
+      startScreen.classList.add('hidden');
+      playAgainButton.classList.add('hidden');
+      pauseOverlay.style.display = 'none';
+      paused = false;
+
+      enemyInterval = setInterval(createEnemy, 1000);
+      timerInterval = setInterval(() => {
+        if (!paused) {
+          timeLeft--;
+          if (timeLeft <= 0) {
             endGame();
+          }
         }
-    }, 1000);
+      }, 1000);
 
-    gameLoop();
-}
+      gameLoop();
+    }
 
-// End the game
-function endGame() {
-    clearInterval(enemyInterval);
-    clearInterval(timerInterval);
-    gameOver = true;
-    playAgainButton.classList.remove('hidden'); // Show the Play Again button
-}
+    // End the game
+    function endGame() {
+      clearInterval(enemyInterval);
+      clearInterval(timerInterval);
+      gameOver = true;
+      playAgainButton.classList.remove('hidden');
+    }
 
-// Game loop
-function gameLoop() {
-    if (gameOver) return;
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-// Play again functionality
-playAgainButton.addEventListener('click', startGame);
-
-// Start game on button click
-startButton.addEventListener('click', startGame);
-
-</script>
-
+    // Event listeners for Play Again and Start buttons
+    playAgainButton.addEventListener('click', startGame);
+    startButton.addEventListener('click', startGame);
+  </script>
 </body>
 </html>
